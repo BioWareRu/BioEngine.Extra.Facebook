@@ -23,7 +23,7 @@ namespace BioEngine.Extra.Facebook
                         $"Facebook api url is incorrect: {builderContext.Configuration["BE_FACEBOOK_API_URL"]}");
                 }
 
-                config.ApiURL = url;
+                config.ApiUrl = url;
                 config.PageId = builderContext.Configuration["BE_FACEBOOK_PAGE_ID"];
                 config.AccessToken = builderContext.Configuration["BE_FACEBOOK_ACCESS_TOKEN"];
             });

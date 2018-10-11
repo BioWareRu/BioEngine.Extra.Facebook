@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Flurl;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Flurl.Http;
 
@@ -21,7 +20,7 @@ namespace BioEngine.Extra.Facebook.Service
         {
             _logger.LogDebug("Post new link to facebook");
             var response =
-                await $"{config.ApiURL}/{config.PageId}/feed"
+                await $"{config.ApiUrl}/{config.PageId}/feed"
                     .SetQueryParam("link", link.ToString())
                     .SetQueryParam("access_token", config.AccessToken)
                     .WithTimeout(60)
@@ -42,7 +41,7 @@ namespace BioEngine.Extra.Facebook.Service
         {
             _logger.LogDebug("Delete post from facebook");
             var response =
-                await $"{config.ApiURL}/{postId}"
+                await $"{config.ApiUrl}/{postId}"
                     .SetQueryParam("access_token", config.AccessToken)
                     .DeleteAsync();
             var data = await response.Content.ReadAsStringAsync();

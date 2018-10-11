@@ -50,7 +50,7 @@ namespace BioEngine.Extra.Facebook
                     var facebookConfig = new FacebookServiceConfiguration
                     {
                         AccessToken = siteSettings.AccessToken,
-                        ApiURL = siteSettings.ApiUrl,
+                        ApiUrl = siteSettings.ApiUrl,
                         PageId = siteSettings.PageId
                     };
 
