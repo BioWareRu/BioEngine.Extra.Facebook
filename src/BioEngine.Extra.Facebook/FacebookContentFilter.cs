@@ -32,7 +32,7 @@ namespace BioEngine.Extra.Facebook
             return typeof(ContentItem).IsAssignableFrom(type);
         }
 
-        public override async Task<bool> AfterSave<T, TId>(T item)
+        public override async Task<bool> AfterSave<T, TId>(T item, PropertyChange[] changes = null)
         {
             var content = item as ContentItem;
             if (content != null)
@@ -56,7 +56,9 @@ namespace BioEngine.Extra.Facebook
 
                     var itemSettings = await _settingsProvider.Get<FacebookContentSettings>(content, site.Id);
 
-                    if (!string.IsNullOrEmpty(itemSettings.PostId))
+                    var hasChanges = changes != null && changes.Any(c => c.Name == nameof(content.Url));
+
+                    if (!string.IsNullOrEmpty(itemSettings.PostId) && (hasChanges || !content.IsPublished))
                     {
                         var deleted = await _facebookService.DeletePost(itemSettings.PostId, facebookConfig);
                         if (!deleted)
@@ -67,7 +69,7 @@ namespace BioEngine.Extra.Facebook
                         itemSettings.PostId = null;
                     }
 
-                    if (content.IsPublished)
+                    if (content.IsPublished && (string.IsNullOrEmpty(itemSettings.PostId) || hasChanges))
                     {
                         var postId = await _facebookService.PostLink(new Uri($"{site.Url}{content.PublicUrl}"),
                             facebookConfig);
