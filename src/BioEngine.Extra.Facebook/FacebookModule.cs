@@ -2,7 +2,7 @@ using System;
 using BioEngine.Core.Entities;
 using BioEngine.Core.Interfaces;
 using BioEngine.Core.Modules;
-using BioEngine.Core.Providers;
+using BioEngine.Core.Settings;
 using BioEngine.Extra.Facebook.Service;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
