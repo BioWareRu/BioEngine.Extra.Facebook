@@ -16,7 +16,7 @@ namespace BioEngine.Extra.Facebook.Service
             _logger = logger;
         }
 
-        public async Task<string> PostLink(Uri link, FacebookServiceConfiguration config)
+        public async Task<string> PostLinkAsync(Uri link, FacebookServiceConfiguration config)
         {
             _logger.LogDebug("Post new link to facebook");
             var response =
@@ -37,7 +37,7 @@ namespace BioEngine.Extra.Facebook.Service
             return postReponse.Id;
         }
 
-        public async Task<bool> DeletePost(string postId, FacebookServiceConfiguration config)
+        public async Task<bool> DeletePostAsync(string postId, FacebookServiceConfiguration config)
         {
             _logger.LogDebug("Delete post from facebook");
             var response =

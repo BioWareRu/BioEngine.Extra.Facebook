@@ -32,7 +32,7 @@ namespace BioEngine.Extra.Facebook
             return typeof(ContentItem).IsAssignableFrom(type);
         }
 
-        public override async Task<bool> AfterSave<T, TId>(T item, PropertyChange[] changes = null)
+        public override async Task<bool> AfterSaveAsync<T, TId>(T item, PropertyChange[] changes = null)
         {
             var content = item as ContentItem;
             if (content != null)
@@ -40,7 +40,7 @@ namespace BioEngine.Extra.Facebook
                 var sites = await _bioContext.Sites.Where(s => content.SiteIds.Contains(s.Id)).ToListAsync();
                 foreach (var site in sites)
                 {
-                    var siteSettings = await _settingsProvider.Get<FacebookSiteSettings>(site);
+                    var siteSettings = await _settingsProvider.GetAsync<FacebookSiteSettings>(site);
                     if (!siteSettings.IsEnabled)
                     {
                         _logger.LogInformation($"Facebook is not enabled for site {site.Title}");
@@ -54,13 +54,13 @@ namespace BioEngine.Extra.Facebook
                         PageId = siteSettings.PageId
                     };
 
-                    var itemSettings = await _settingsProvider.Get<FacebookContentSettings>(content, site.Id);
+                    var itemSettings = await _settingsProvider.GetAsync<FacebookContentSettings>(content, site.Id);
 
                     var hasChanges = changes != null && changes.Any(c => c.Name == nameof(content.Url));
 
                     if (!string.IsNullOrEmpty(itemSettings.PostId) && (hasChanges || !content.IsPublished))
                     {
-                        var deleted = await _facebookService.DeletePost(itemSettings.PostId, facebookConfig);
+                        var deleted = await _facebookService.DeletePostAsync(itemSettings.PostId, facebookConfig);
                         if (!deleted)
                         {
                             throw new Exception("Can't delete content post from Facebook");
@@ -71,7 +71,7 @@ namespace BioEngine.Extra.Facebook
 
                     if (content.IsPublished && (string.IsNullOrEmpty(itemSettings.PostId) || hasChanges))
                     {
-                        var postId = await _facebookService.PostLink(new Uri($"{site.Url}{content.PublicUrl}"),
+                        var postId = await _facebookService.PostLinkAsync(new Uri($"{site.Url}{content.PublicUrl}"),
                             facebookConfig);
                         if (!string.IsNullOrEmpty(postId))
                         {
@@ -79,7 +79,7 @@ namespace BioEngine.Extra.Facebook
                         }
                     }
 
-                    await _settingsProvider.Set(itemSettings, content, site.Id);
+                    await _settingsProvider.SetAsync(itemSettings, content, site.Id);
                 }
 
 
