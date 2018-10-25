@@ -2,7 +2,7 @@ using System;
 using BioEngine.Core.Entities;
 using BioEngine.Core.Interfaces;
 using BioEngine.Core.Modules;
-using BioEngine.Core.Settings;
+using BioEngine.Core.Properties;
 using BioEngine.Extra.Facebook.Service;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,8 +30,8 @@ namespace BioEngine.Extra.Facebook
             services.AddSingleton<FacebookService>();
             services.AddScoped<IRepositoryFilter, FacebookContentFilter>();
 
-            SettingsProvider.RegisterBioEngineContentSettings<FacebookContentSettings>();
-            SettingsProvider.RegisterBioEngineSettings<FacebookSiteSettings, Site>();
+            PropertiesProvider.RegisterBioEngineContentProperties<FacebookContentPropertiesSet>();
+            PropertiesProvider.RegisterBioEngineProperties<FacebookSitePropertiesSet, Site>();
         }
     }
 }

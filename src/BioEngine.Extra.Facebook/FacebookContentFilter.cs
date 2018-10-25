@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BioEngine.Core.DB;
 using BioEngine.Core.Entities;
+using BioEngine.Core.Properties;
 using BioEngine.Core.Repository;
-using BioEngine.Core.Settings;
 using BioEngine.Extra.Facebook.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,15 +13,15 @@ namespace BioEngine.Extra.Facebook
 {
     public class FacebookContentFilter : BaseRepositoryFilter
     {
-        private readonly SettingsProvider _settingsProvider;
+        private readonly PropertiesProvider _propertiesProvider;
         private readonly FacebookService _facebookService;
         private readonly BioContext _bioContext;
         private readonly ILogger<FacebookContentFilter> _logger;
 
-        public FacebookContentFilter(SettingsProvider settingsProvider, FacebookService facebookService,
+        public FacebookContentFilter(PropertiesProvider propertiesProvider, FacebookService facebookService,
             BioContext bioContext, ILogger<FacebookContentFilter> logger)
         {
-            _settingsProvider = settingsProvider;
+            _propertiesProvider = propertiesProvider;
             _facebookService = facebookService;
             _bioContext = bioContext;
             _logger = logger;
@@ -40,8 +40,8 @@ namespace BioEngine.Extra.Facebook
                 var sites = await _bioContext.Sites.Where(s => content.SiteIds.Contains(s.Id)).ToListAsync();
                 foreach (var site in sites)
                 {
-                    var siteSettings = await _settingsProvider.GetAsync<FacebookSiteSettings>(site);
-                    if (!siteSettings.IsEnabled)
+                    var siteProperties = await _propertiesProvider.GetAsync<FacebookSitePropertiesSet>(site);
+                    if (!siteProperties.IsEnabled)
                     {
                         _logger.LogInformation($"Facebook is not enabled for site {site.Title}");
                         continue;
@@ -49,37 +49,37 @@ namespace BioEngine.Extra.Facebook
 
                     var facebookConfig = new FacebookServiceConfiguration
                     {
-                        AccessToken = siteSettings.AccessToken,
-                        ApiUrl = siteSettings.ApiUrl,
-                        PageId = siteSettings.PageId
+                        AccessToken = siteProperties.AccessToken,
+                        ApiUrl = siteProperties.ApiUrl,
+                        PageId = siteProperties.PageId
                     };
 
-                    var itemSettings = await _settingsProvider.GetAsync<FacebookContentSettings>(content, site.Id);
+                    var itemProperties = await _propertiesProvider.GetAsync<FacebookContentPropertiesSet>(content, site.Id);
 
                     var hasChanges = changes != null && changes.Any(c => c.Name == nameof(content.Url));
 
-                    if (!string.IsNullOrEmpty(itemSettings.PostId) && (hasChanges || !content.IsPublished))
+                    if (!string.IsNullOrEmpty(itemProperties.PostId) && (hasChanges || !content.IsPublished))
                     {
-                        var deleted = await _facebookService.DeletePostAsync(itemSettings.PostId, facebookConfig);
+                        var deleted = await _facebookService.DeletePostAsync(itemProperties.PostId, facebookConfig);
                         if (!deleted)
                         {
                             throw new Exception("Can't delete content post from Facebook");
                         }
 
-                        itemSettings.PostId = null;
+                        itemProperties.PostId = null;
                     }
 
-                    if (content.IsPublished && (string.IsNullOrEmpty(itemSettings.PostId) || hasChanges))
+                    if (content.IsPublished && (string.IsNullOrEmpty(itemProperties.PostId) || hasChanges))
                     {
                         var postId = await _facebookService.PostLinkAsync(new Uri($"{site.Url}{content.PublicUrl}"),
                             facebookConfig);
                         if (!string.IsNullOrEmpty(postId))
                         {
-                            itemSettings.PostId = postId;
+                            itemProperties.PostId = postId;
                         }
                     }
 
-                    await _settingsProvider.SetAsync(itemSettings, content, site.Id);
+                    await _propertiesProvider.SetAsync(itemProperties, content, site.Id);
                 }
 
 
