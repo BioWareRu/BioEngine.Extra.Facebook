@@ -29,12 +29,12 @@ namespace BioEngine.Extra.Facebook
 
         public override bool CanProcess(Type type)
         {
-            return typeof(ContentItem).IsAssignableFrom(type);
+            return typeof(Post).IsAssignableFrom(type);
         }
 
         public override async Task<bool> AfterSaveAsync<T, TId>(T item, PropertyChange[] changes = null)
         {
-            var content = item as ContentItem;
+            var content = item as Post;
             if (content != null)
             {
                 var sites = await _bioContext.Sites.Where(s => content.SiteIds.Contains(s.Id)).ToListAsync();
