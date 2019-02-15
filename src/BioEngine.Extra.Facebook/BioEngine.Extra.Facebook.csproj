@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Flurl.Http" Version="2.4.0" />
+        <PackageReference Include="Flurl.Http" Version="2.4.1" />
     </ItemGroup>
     <Choose>
         <When Condition="Exists('..\..\..\BioEngine.Core')">
