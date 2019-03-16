@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BioEngine.Core.DB;
 using BioEngine.Core.Entities;
+using BioEngine.Core.Interfaces;
 using BioEngine.Core.Properties;
 using BioEngine.Core.Repository;
 using BioEngine.Extra.Facebook.Service;
@@ -32,7 +33,8 @@ namespace BioEngine.Extra.Facebook
             return typeof(Post).IsAssignableFrom(type);
         }
 
-        public override async Task<bool> AfterSaveAsync<T>(T item, PropertyChange[] changes = null)
+        public override async Task<bool> AfterSaveAsync<T>(T item, PropertyChange[] changes = null,
+            IBioRepositoryOperationContext operationContext = null)
         {
             var content = item as Post;
             if (content != null)
@@ -54,7 +56,8 @@ namespace BioEngine.Extra.Facebook
                         PageId = siteProperties.PageId
                     };
 
-                    var itemProperties = await _propertiesProvider.GetAsync<FacebookContentPropertiesSet>(content, site.Id);
+                    var itemProperties =
+                        await _propertiesProvider.GetAsync<FacebookContentPropertiesSet>(content, site.Id);
 
                     var hasChanges = changes != null && changes.Any(c => c.Name == nameof(content.Url));
 
