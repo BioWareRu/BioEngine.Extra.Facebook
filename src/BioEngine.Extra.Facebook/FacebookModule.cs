@@ -29,7 +29,7 @@ namespace BioEngine.Extra.Facebook
                 config.AccessToken = configuration["BE_FACEBOOK_ACCESS_TOKEN"];
             });
             services.AddSingleton<FacebookService>();
-            services.AddScoped<IRepositoryFilter, FacebookContentFilter>();
+            services.AddScoped<IRepositoryHook, FacebookContentHook>();
 
             PropertiesProvider.RegisterBioEngineContentProperties<FacebookContentPropertiesSet>();
             PropertiesProvider.RegisterBioEngineProperties<FacebookSitePropertiesSet, Site>();

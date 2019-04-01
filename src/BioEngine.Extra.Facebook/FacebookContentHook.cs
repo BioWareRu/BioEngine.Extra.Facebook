@@ -11,15 +11,15 @@ using Microsoft.Extensions.Logging;
 
 namespace BioEngine.Extra.Facebook
 {
-    public class FacebookContentFilter : BaseRepositoryFilter
+    public class FacebookContentHook : BaseRepositoryHook
     {
         private readonly PropertiesProvider _propertiesProvider;
         private readonly FacebookService _facebookService;
         private readonly BioContext _bioContext;
-        private readonly ILogger<FacebookContentFilter> _logger;
+        private readonly ILogger<FacebookContentHook> _logger;
 
-        public FacebookContentFilter(PropertiesProvider propertiesProvider, FacebookService facebookService,
-            BioContext bioContext, ILogger<FacebookContentFilter> logger)
+        public FacebookContentHook(PropertiesProvider propertiesProvider, FacebookService facebookService,
+            BioContext bioContext, ILogger<FacebookContentHook> logger)
         {
             _propertiesProvider = propertiesProvider;
             _facebookService = facebookService;
