@@ -51,9 +51,9 @@ namespace BioEngine.Extra.Facebook.Service
                 throw new Exception($"Bad facebook response: {data}");
             }
 
-            var postReponse = JsonConvert.DeserializeObject<FacebookDeleteResponse>(data);
-            _logger.LogDebug($"Post deleted from facebook: {(postReponse.Success ? "Yes" : "No")}");
-            return postReponse.Success;
+            var postResponse = JsonConvert.DeserializeObject<FacebookDeleteResponse>(data);
+            _logger.LogDebug("Post deleted from facebook: {response}", (postResponse.Success ? "Yes" : "No"));
+            return postResponse.Success;
         }
 
         public class FacebookNewPostResponse
