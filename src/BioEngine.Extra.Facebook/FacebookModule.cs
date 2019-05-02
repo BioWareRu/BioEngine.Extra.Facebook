@@ -31,8 +31,8 @@ namespace BioEngine.Extra.Facebook
             services.AddSingleton<FacebookService>();
             services.AddScoped<IRepositoryHook, FacebookContentHook>();
 
-            PropertiesProvider.RegisterBioEngineContentProperties<FacebookContentPropertiesSet>();
-            PropertiesProvider.RegisterBioEngineProperties<FacebookSitePropertiesSet, Site>();
+            PropertiesProvider.RegisterBioEngineContentProperties<FacebookContentPropertiesSet>("facebookcontent");
+            PropertiesProvider.RegisterBioEngineProperties<FacebookSitePropertiesSet, Site>("facebooksite");
         }
     }
 }
