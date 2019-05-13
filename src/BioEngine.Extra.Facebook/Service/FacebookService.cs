@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Flurl;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,7 @@ namespace BioEngine.Extra.Facebook.Service
             _logger = logger;
         }
 
+        [SuppressMessage("ReSharper", "RCS1198")]
         public async Task<string?> PostLinkAsync(Uri link, FacebookModuleConfig config)
         {
             _logger.LogDebug("Post new link to facebook");
@@ -37,6 +39,7 @@ namespace BioEngine.Extra.Facebook.Service
             return postResponse.Id;
         }
 
+        [SuppressMessage("ReSharper", "RCS1198")]
         public async Task<bool> DeletePostAsync(string postId, FacebookModuleConfig config)
         {
             _logger.LogDebug("Delete post from facebook");
