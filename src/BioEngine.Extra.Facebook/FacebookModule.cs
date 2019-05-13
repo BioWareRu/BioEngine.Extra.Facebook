@@ -10,29 +10,42 @@ using Microsoft.Extensions.Hosting;
 
 namespace BioEngine.Extra.Facebook
 {
-    public class FacebookModule : BioEngineModule
+    public class FacebookModule : BioEngineModule<FacebookModuleConfig>
     {
-        public override void ConfigureServices(IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
+        protected override void CheckConfig()
         {
-            services.Configure<FacebookServiceConfiguration>(config =>
+            if (Config.Url == null)
             {
-                var parsed = Uri.TryCreate(configuration["BE_FACEBOOK_API_URL"], UriKind.Absolute,
-                    out var url);
-                if (!parsed)
-                {
-                    throw new ArgumentException(
-                        $"Facebook api url is incorrect: {configuration["BE_FACEBOOK_API_URL"]}");
-                }
+                throw new ArgumentException("Facebook api url is not set");
+            }
 
-                config.ApiUrl = url;
-                config.PageId = configuration["BE_FACEBOOK_PAGE_ID"];
-                config.AccessToken = configuration["BE_FACEBOOK_ACCESS_TOKEN"];
-            });
+            if (string.IsNullOrEmpty(Config.PageId))
+            {
+                throw new ArgumentException("Facebook pageId is not set");
+            }
+
+            if (string.IsNullOrEmpty(Config.AccessToken))
+            {
+                throw new ArgumentException("Facebook access token is not set");
+            }
+        }
+
+        public override void ConfigureServices(IServiceCollection services, IConfiguration configuration,
+            IHostEnvironment environment)
+        {
+            services.AddSingleton(Config);
             services.AddSingleton<FacebookService>();
             services.AddScoped<IRepositoryHook, FacebookContentHook>();
 
             PropertiesProvider.RegisterBioEngineContentProperties<FacebookContentPropertiesSet>("facebookcontent");
             PropertiesProvider.RegisterBioEngineProperties<FacebookSitePropertiesSet, Site>("facebooksite");
         }
+    }
+
+    public class FacebookModuleConfig
+    {
+        public Uri? Url { get; set; }
+        public string PageId { get; set; } = "";
+        public string AccessToken { get; set; } = "";
     }
 }

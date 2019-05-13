@@ -32,11 +32,10 @@ namespace BioEngine.Extra.Facebook
             return typeof(Post).IsAssignableFrom(type);
         }
 
-        public override async Task<bool> AfterSaveAsync<T>(T item, PropertyChange[] changes = null,
-            IBioRepositoryOperationContext operationContext = null)
+        public override async Task<bool> AfterSaveAsync<T>(T item, PropertyChange[]? changes = null,
+            IBioRepositoryOperationContext? operationContext = null)
         {
-            var content = item as Post;
-            if (content != null)
+            if (item is Post content)
             {
                 var sites = await _bioContext.Sites.Where(s => content.SiteIds.Contains(s.Id)).ToListAsync();
                 foreach (var site in sites)
@@ -48,10 +47,10 @@ namespace BioEngine.Extra.Facebook
                         continue;
                     }
 
-                    var facebookConfig = new FacebookServiceConfiguration
+                    var facebookConfig = new FacebookModuleConfig
                     {
                         AccessToken = siteProperties.AccessToken,
-                        ApiUrl = siteProperties.ApiUrl,
+                        Url = siteProperties.ApiUrl,
                         PageId = siteProperties.PageId
                     };
 

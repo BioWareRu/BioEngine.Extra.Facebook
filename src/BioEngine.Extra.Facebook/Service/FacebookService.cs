@@ -16,11 +16,11 @@ namespace BioEngine.Extra.Facebook.Service
             _logger = logger;
         }
 
-        public async Task<string> PostLinkAsync(Uri link, FacebookServiceConfiguration config)
+        public async Task<string?> PostLinkAsync(Uri link, FacebookModuleConfig config)
         {
             _logger.LogDebug("Post new link to facebook");
             var response =
-                await $"{config.ApiUrl}/{config.PageId}/feed"
+                await $"{config.Url}/{config.PageId}/feed"
                     .SetQueryParam("link", link.ToString())
                     .SetQueryParam("access_token", config.AccessToken)
                     .WithTimeout(60)
@@ -32,16 +32,16 @@ namespace BioEngine.Extra.Facebook.Service
                 throw new Exception($"Bad facebook response: {data}");
             }
 
-            var postReponse = JsonConvert.DeserializeObject<FacebookNewPostResponse>(data);
+            var postResponse = JsonConvert.DeserializeObject<FacebookNewPostResponse>(data);
             _logger.LogDebug("Link posted to facebook");
-            return postReponse.Id;
+            return postResponse.Id;
         }
 
-        public async Task<bool> DeletePostAsync(string postId, FacebookServiceConfiguration config)
+        public async Task<bool> DeletePostAsync(string postId, FacebookModuleConfig config)
         {
             _logger.LogDebug("Delete post from facebook");
             var response =
-                await $"{config.ApiUrl}/{postId}"
+                await $"{config.Url}/{postId}"
                     .SetQueryParam("access_token", config.AccessToken)
                     .DeleteAsync();
             var data = await response.Content.ReadAsStringAsync();
@@ -58,7 +58,7 @@ namespace BioEngine.Extra.Facebook.Service
 
         public class FacebookNewPostResponse
         {
-            [JsonProperty("id")] public string Id { get; set; }
+            [JsonProperty("id")] public string? Id { get; set; }
         }
 
         public class FacebookDeleteResponse

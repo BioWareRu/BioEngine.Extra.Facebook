@@ -6,6 +6,6 @@ namespace BioEngine.Extra.Facebook
     public class FacebookContentPropertiesSet : PropertiesSet
     {
         [PropertiesElement("ID поста")]
-        public string PostId { get; set; }
+        public string? PostId { get; set; }
     }
 }
