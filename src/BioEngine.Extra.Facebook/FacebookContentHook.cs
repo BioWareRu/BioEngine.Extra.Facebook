@@ -47,12 +47,27 @@ namespace BioEngine.Extra.Facebook
                         continue;
                     }
 
-                    var facebookConfig = new FacebookModuleConfig
+                    if (string.IsNullOrEmpty(siteProperties.ApiUrl))
                     {
-                        AccessToken = siteProperties.AccessToken,
-                        Url = siteProperties.ApiUrl != null ? new Uri(siteProperties.ApiUrl) : null,
-                        PageId = siteProperties.PageId
-                    };
+                        _logger.LogError("Facebook url is not configured for site {siteTitle}", site.Title);
+                        continue;
+                    }
+
+                    if (string.IsNullOrEmpty(siteProperties.PageId))
+                    {
+                        _logger.LogError("Facebook page id is not configured for site {siteTitle}", site.Title);
+                        continue;
+                    }
+
+                    if (string.IsNullOrEmpty(siteProperties.AccessToken))
+                    {
+                        _logger.LogError("Facebook access token is not configured for site {siteTitle}",
+                            site.Title);
+                        continue;
+                    }
+
+                    var facebookConfig = new FacebookModuleConfig(new Uri(siteProperties.ApiUrl), siteProperties.PageId,
+                        siteProperties.AccessToken);
 
                     var itemProperties =
                         await _propertiesProvider.GetAsync<FacebookContentPropertiesSet>(content, site.Id);

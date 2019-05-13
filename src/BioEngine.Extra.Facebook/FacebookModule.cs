@@ -44,8 +44,15 @@ namespace BioEngine.Extra.Facebook
 
     public class FacebookModuleConfig
     {
-        public Uri? Url { get; set; }
-        public string PageId { get; set; } = "";
-        public string AccessToken { get; set; } = "";
+        public FacebookModuleConfig(Uri url, string pageId, string accessToken)
+        {
+            Url = url;
+            PageId = pageId;
+            AccessToken = accessToken;
+        }
+
+        public Uri Url { get; }
+        public string PageId { get; }
+        public string AccessToken { get; }
     }
 }
