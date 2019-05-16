@@ -18,7 +18,7 @@ namespace BioEngine.Extra.Facebook.Service
         }
 
         [SuppressMessage("ReSharper", "RCS1198")]
-        public async Task<string?> PostLinkAsync(Uri link, FacebookModuleConfig config)
+        public async Task<string?> PostLinkAsync(Uri link, FacebookConfig config)
         {
             _logger.LogDebug("Post new link to facebook");
             var response =
@@ -40,7 +40,7 @@ namespace BioEngine.Extra.Facebook.Service
         }
 
         [SuppressMessage("ReSharper", "RCS1198")]
-        public async Task<bool> DeletePostAsync(string postId, FacebookModuleConfig config)
+        public async Task<bool> DeletePostAsync(string postId, FacebookConfig config)
         {
             _logger.LogDebug("Delete post from facebook");
             var response =
