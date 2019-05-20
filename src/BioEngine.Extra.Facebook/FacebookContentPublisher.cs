@@ -31,7 +31,7 @@ namespace BioEngine.Extra.Facebook
 
             var record = new FacebookPublishRecord
             {
-                ContentId = entity.Id, Type = entity.GetType().FullName, PostId = postId, SiteId = site.Id
+                ContentId = entity.Id, Type = entity.GetType().FullName, PostId = postId, SiteIds = new[] {site.Id}
             };
 
             return record;
