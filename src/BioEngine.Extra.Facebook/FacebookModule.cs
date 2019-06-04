@@ -23,9 +23,9 @@ namespace BioEngine.Extra.Facebook
             PropertiesProvider.RegisterBioEngineProperties<FacebookSitePropertiesSet, Site>("facebooksite");
         }
 
-        public override void RegisterEntities(BioEntitiesManager entitiesManager)
+        public override void ConfigureDbContext(BioEntitiesManager entitiesManager)
         {
-            base.RegisterEntities(entitiesManager);
+            base.ConfigureDbContext(entitiesManager);
             entitiesManager.Register<FacebookPublishRecord>();
         }
     }

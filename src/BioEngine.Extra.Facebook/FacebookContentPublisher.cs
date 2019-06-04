@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using BioEngine.Core.DB;
 using BioEngine.Core.Entities;
 using BioEngine.Core.Publishers;
+using BioEngine.Core.Routing;
 using BioEngine.Extra.Facebook.Entities;
 using BioEngine.Extra.Facebook.Service;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
 namespace BioEngine.Extra.Facebook
@@ -12,17 +14,19 @@ namespace BioEngine.Extra.Facebook
     public class FacebookContentPublisher : BaseContentPublisher<FacebookConfig, FacebookPublishRecord>
     {
         private readonly FacebookService _facebookService;
+        private readonly LinkGenerator _linkGenerator;
 
         public FacebookContentPublisher(FacebookService facebookService, BioContext dbContext,
-            ILogger<IContentPublisher<FacebookConfig>> logger) : base(dbContext, logger)
+            ILogger<IContentPublisher<FacebookConfig>> logger, LinkGenerator linkGenerator) : base(dbContext, logger)
         {
             _facebookService = facebookService;
+            _linkGenerator = linkGenerator;
         }
 
-        protected override async Task<FacebookPublishRecord> DoPublishAsync(IContentEntity entity, Site site,
+        protected override async Task<FacebookPublishRecord> DoPublishAsync(ContentItem entity, Site site,
             FacebookConfig config)
         {
-            var postId = await _facebookService.PostLinkAsync(new Uri($"{site.Url}{entity.PublicUrl}"),
+            var postId = await _facebookService.PostLinkAsync(_linkGenerator.GeneratePublicUrl(entity, site),
                 config);
             if (string.IsNullOrEmpty(postId))
             {
