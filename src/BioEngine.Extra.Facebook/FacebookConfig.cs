@@ -1,5 +1,5 @@
 using System;
-using BioEngine.Core.Publishers;
+using BioEngine.Core.Social;
 
 namespace BioEngine.Extra.Facebook
 {

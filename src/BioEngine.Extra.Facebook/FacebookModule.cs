@@ -2,7 +2,7 @@ using BioEngine.Core.DB;
 using BioEngine.Core.Entities;
 using BioEngine.Core.Modules;
 using BioEngine.Core.Properties;
-using BioEngine.Core.Publishers;
+using BioEngine.Core.Social;
 using BioEngine.Extra.Facebook.Entities;
 using BioEngine.Extra.Facebook.Service;
 using Microsoft.Extensions.Configuration;

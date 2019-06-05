@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using BioEngine.Core.Publishers;
+using BioEngine.Core.Social;
 
 namespace BioEngine.Extra.Facebook.Entities
 {
