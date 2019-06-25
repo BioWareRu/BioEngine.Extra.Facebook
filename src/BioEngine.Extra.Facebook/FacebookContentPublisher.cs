@@ -23,7 +23,8 @@ namespace BioEngine.Extra.Facebook
             _linkGenerator = linkGenerator;
         }
 
-        protected override async Task<FacebookPublishRecord> DoPublishAsync(ContentItem entity, Site site,
+        protected override async Task<FacebookPublishRecord> DoPublishAsync(FacebookPublishRecord record,
+            ContentItem entity, Site site,
             FacebookConfig config)
         {
             var postId = await _facebookService.PostLinkAsync(_linkGenerator.GeneratePublicUrl(entity, site),
@@ -33,10 +34,7 @@ namespace BioEngine.Extra.Facebook
                 throw new Exception($"Can't create facebook post for item {entity.Title} ({entity.Id.ToString()})");
             }
 
-            var record = new FacebookPublishRecord
-            {
-                ContentId = entity.Id, Type = entity.GetType().FullName, PostId = postId, SiteIds = new[] {site.Id}
-            };
+            record.PostId = postId;
 
             return record;
         }
