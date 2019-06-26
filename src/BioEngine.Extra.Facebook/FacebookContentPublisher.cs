@@ -16,8 +16,8 @@ namespace BioEngine.Extra.Facebook
         private readonly FacebookService _facebookService;
         private readonly LinkGenerator _linkGenerator;
 
-        public FacebookContentPublisher(FacebookService facebookService, BioContext dbContext,
-            ILogger<IContentPublisher<FacebookConfig>> logger, LinkGenerator linkGenerator) : base(dbContext, logger)
+        public FacebookContentPublisher(FacebookService facebookService, BioContext dbContext, BioEntitiesManager entitiesManager,
+            ILogger<IContentPublisher<FacebookConfig>> logger, LinkGenerator linkGenerator) : base(dbContext, logger, entitiesManager)
         {
             _facebookService = facebookService;
             _linkGenerator = linkGenerator;
