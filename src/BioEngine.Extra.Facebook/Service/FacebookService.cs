@@ -21,22 +21,31 @@ namespace BioEngine.Extra.Facebook.Service
         public async Task<string?> PostLinkAsync(Uri link, FacebookConfig config)
         {
             _logger.LogDebug("Post new link to facebook");
-            var response =
-                await $"{config.Url}/{config.PageId}/feed"
-                    .SetQueryParam("link", link.ToString())
-                    .SetQueryParam("access_token", config.AccessToken)
-                    .WithTimeout(60)
-                    .PostUrlEncodedAsync(new { });
-            var data = await response.Content.ReadAsStringAsync();
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                _logger.LogError("Error while sending facebook request");
-                throw new Exception($"Bad facebook response: {data}");
-            }
+                var response =
+                    await $"{config.Url}/{config.PageId}/feed"
+                        .SetQueryParam("link", link.ToString())
+                        .SetQueryParam("access_token", config.AccessToken)
+                        .WithTimeout(60)
+                        .PostUrlEncodedAsync(new { });
+                var data = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("Error while sending facebook request");
+                    throw new Exception($"Bad facebook response: {data}");
+                }
 
-            var postResponse = JsonConvert.DeserializeObject<FacebookNewPostResponse>(data);
-            _logger.LogDebug("Link posted to facebook");
-            return postResponse.Id;
+                var postResponse = JsonConvert.DeserializeObject<FacebookNewPostResponse>(data);
+                _logger.LogDebug("Link posted to facebook");
+                return postResponse.Id;
+            }
+            catch (FlurlHttpException ex)
+            {
+                _logger.LogError(ex, "Error in request to Facebook: {errorText}. Response: {response}", ex.ToString(),
+                    await ex.GetResponseStringAsync());
+                return null;
+            }
         }
 
         [SuppressMessage("ReSharper", "RCS1198")]
