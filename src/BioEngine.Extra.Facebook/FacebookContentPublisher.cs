@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using BioEngine.Core.Abstractions;
 using BioEngine.Core.DB;
 using BioEngine.Core.Entities;
 using BioEngine.Core.Social;
@@ -16,15 +17,15 @@ namespace BioEngine.Extra.Facebook
         private readonly FacebookService _facebookService;
         private readonly LinkGenerator _linkGenerator;
 
-        public FacebookContentPublisher(FacebookService facebookService, BioContext dbContext, BioEntitiesManager entitiesManager,
-            ILogger<FacebookContentPublisher> logger, LinkGenerator linkGenerator) : base(dbContext, logger, entitiesManager)
+        public FacebookContentPublisher(FacebookService facebookService, BioContext dbContext,
+            ILogger<FacebookContentPublisher> logger, LinkGenerator linkGenerator) : base(dbContext, logger)
         {
             _facebookService = facebookService;
             _linkGenerator = linkGenerator;
         }
 
         protected override async Task<FacebookPublishRecord> DoPublishAsync(FacebookPublishRecord record,
-            ContentItem entity, Site site,
+            IContentItem entity, Site site,
             FacebookConfig config)
         {
             var postId = await _facebookService.PostLinkAsync(_linkGenerator.GeneratePublicUrl(entity, site),
